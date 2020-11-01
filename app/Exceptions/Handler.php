@@ -49,6 +49,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+
+        if ($exception instanceof ThrottleException) {
+            return response([
+                'code' => $exception->getCode(),
+                'msg' => $exception->getMessage()
+            ], 429);
+        }
+
         return parent::render($request, $exception);
     }
 }

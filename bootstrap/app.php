@@ -1,5 +1,7 @@
 <?php
 
+use App\Exceptions\ThrottleException;
+use App\Http\Middleware\ThrottleRequests;
 use Intervention\Image\ImageServiceProviderLumen;
 
 require_once __DIR__.'/../vendor/autoload.php';
@@ -125,5 +127,8 @@ $app->configure('filesystems');
 $app->register(ImageServiceProviderLumen::class);
 $app->withFacades();
 $app->withEloquent();
+$app->routeMiddleware([
+    'throttle' => App\Http\Middleware\ThrottleRequests::class,
+]);
 
 return $app;
