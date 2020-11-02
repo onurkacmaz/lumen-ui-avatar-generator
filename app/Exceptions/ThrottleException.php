@@ -8,7 +8,7 @@ class ThrottleException extends Exception
 {
     protected $isReport = false;
 
-    public function isReport()
+    public function isReport(): bool
     {
         return $this->isReport;
     }

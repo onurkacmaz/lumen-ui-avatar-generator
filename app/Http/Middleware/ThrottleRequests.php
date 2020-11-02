@@ -240,7 +240,7 @@ class ThrottleRequests
     protected function getHeaders($maxAttempts, int $remainingAttempts, $retryAfter = null, ?Response $response = null): array
     {
         if ($response && !is_null($response->headers->get('X-RateLimit-Remaining'))) {
-            if ((int)$response->headers->get('X-RateLimit-Remaining') <= (int)$remainingAttempts){
+            if ((int)$response->headers->get('X-RateLimit-Remaining') <= $remainingAttempts){
 
             return [];
             }
