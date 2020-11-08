@@ -9,13 +9,13 @@ use Intervention\Image\Facades\Image;
 class AvatarGenerator
 {
     public const BG_COLOR = "#ffffff";
-    public const TXT_COLOR = "#fff";
+    public const TXT_COLOR = "#ffffff";
 
     private $name;
     private $bgColor;
-    private $width = 100;
-    private $height = 100;
-    private $fontSize = 20;
+    private $width = 64;
+    private $height = 64;
+    private $fontSize = 15;
     private $textColor;
 
     public function setName(string $name): AvatarGenerator
