@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Storage;
+use Exception;
 use Illuminate\Support\Str;
+use Intervention\Image\Exception\NotReadableException;
 use Intervention\Image\Facades\Image;
 
 class AvatarGenerator
@@ -61,12 +62,14 @@ class AvatarGenerator
         return $this;
     }
 
-    public function generate(): string
+    public function generate(): array
     {
         $xAxis = $this->getWidth() / 2;
         $yAxis = $this->getHeight() / 2;
 
-        $img = Image::canvas($this->getWidth(), $this->getHeight(), $this->getBgColor())->text($this->getName(), $xAxis, $yAxis, function ($font) {
+        try {
+
+            $img = Image::canvas($this->getWidth(), $this->getHeight(), $this->getBgColor())->text($this->getName(), $xAxis, $yAxis, function ($font) {
                 $font->file(app()->basePath("public/fonts/Roboto-Black.ttf"));
                 $font->size($this->getFontSize());
                 $font->color($this->getTextColor());
@@ -74,13 +77,34 @@ class AvatarGenerator
                 $font->valign('center');
             })->encode("png", 100);
 
-        $mimeType = last(explode("/", $img->mime()));
-        $name = uniqid('', false) . '.' . $mimeType;
-        $destinationPath = app()->basePath("public/images/");
+            $mimeType = last(explode("/", $img->mime()));
+            $name = uniqid('', false) . '.' . $mimeType;
+            $destinationPath = app()->basePath("public/images/");
 
-        $img->save($destinationPath . $name, 100);
+            $img->save($destinationPath . $name, 100);
 
-        return "images/" . $name;
+            $res = [
+                "status" => 200,
+                "url" => "images/" . $name
+            ];
+
+        }catch (Exception $e) {
+            if ($e instanceof NotReadableException) {
+                $errors = [
+                    "not_readable_color" => $e->getMessage()
+                ];
+            }else {
+                $errors = [
+                    "unknown_error" => $e->getMessage()
+                ];
+            }
+            $res = [
+                "status" => 400,
+                "errors" => $errors
+            ];
+        }
+
+        return $res;
     }
 
     private function getName(): string

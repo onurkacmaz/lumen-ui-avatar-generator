@@ -61,7 +61,10 @@ class ApiController extends Controller
             $image->lowerCase();
         }
         $image = $image->generate();
-        return $this->responseSuccess($image, 200);
+        if ($image["status"] !== 200) {
+            return $this->responseError($image["errors"], $image["status"]);
+        }
+        return $this->responseSuccess($image["url"], $image["status"]);
     }
 
 }
