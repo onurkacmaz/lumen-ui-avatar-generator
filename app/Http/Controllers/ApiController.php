@@ -39,10 +39,27 @@ class ApiController extends Controller
             return $this->responseError($validator->errors()->getMessages(), 400);
         }
         $image = $this->generator->setName($request->get("name"));
-        $image = $image->upperCase();
-        $image = $image->setBackgroundColor("#fafbfb");
-        $image = $image->setTextColor("#000");
-        $image = $image->upperCase();
+        if ($request->has("backgroundColor") && $request->filled("backgroundColor")) {
+            $image->setBackgroundColor($request->get("backgroundColor"));
+        }else {
+            $image->setBackgroundColor();
+        }
+        if ($request->has("fontSize") && $request->filled("fontSize")) {
+            $image->setFontSize($request->get("fontSize"));
+        }
+        if (($request->has("width") && $request->filled("width")) || ($request->has("height") && $request->filled("height"))) {
+            $image->setSize($request->get("width"), $request->get("height"));
+        }
+        if ($request->has("textColor") && $request->filled("textColor")) {
+            $image->setTextColor($request->get("textColor"));
+        }else {
+            $image->setTextColor();
+        }
+        if ($request->has("upperCase") && $request->filled("upperCase") && (bool)$request->get("upperCase") === true) {
+            $image->upperCase();
+        }else {
+            $image->lowerCase();
+        }
         $image = $image->generate();
         return $this->responseSuccess($image, 200);
     }

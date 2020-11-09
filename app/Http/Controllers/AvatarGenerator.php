@@ -8,8 +8,8 @@ use Intervention\Image\Facades\Image;
 
 class AvatarGenerator
 {
-    public const BG_COLOR = "#ffffff";
-    public const TXT_COLOR = "#ffffff";
+    public const BG_COLOR = "#fafbfb";
+    public const TXT_COLOR = "#000000";
 
     private $name;
     private $bgColor;
@@ -30,10 +30,10 @@ class AvatarGenerator
         return $this;
     }
 
-    public function setSize(int $width, int $height): AvatarGenerator
+    public function setSize(int $width = null, int $height = null): AvatarGenerator
     {
-        $this->width = $width;
-        $this->height = $height;
+        $this->width = $width ?: $this->width;
+        $this->height = $height ?: $this->height;
         return $this;
     }
 
