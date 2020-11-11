@@ -24,7 +24,7 @@ This application allows you to take pictures according to the parameter you send
 
 ## Examples
 
-**avatar.onurkacmaz.com/api?**_name=Onur Kaçmaz
+**avatar.onurkacmaz.com/api?**_name=Onur Kaçmaz_
 
 **avatar.onurkacmaz.com/api?**_name=Onur Kaçmaz&backgroundColor=f00&textColor=000&fontSize=20&width=50&height=55&upperCase=true_
 
