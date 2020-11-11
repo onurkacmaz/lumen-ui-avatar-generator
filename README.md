@@ -28,4 +28,4 @@ This application allows you to take pictures according to the parameter you send
 
 **avatar.onurkacmaz.com/api?**_name=Onur Kaçmaz&backgroundColor=f00&textColor=000&fontSize=20&width=50&height=55&upperCase=true_
 
-**avatar.onurkacmaz.com/api?**_name=Onur Kaçmaz&width=100&height=100&loweCase=true_
+**avatar.onurkacmaz.com/api?**_name=Onur Kaçmaz&width=100&height=100&lowerCase=true_
