@@ -67,21 +67,21 @@ class AvatarGenerator
         $xAxis = $this->getWidth() / 2;
         $yAxis = $this->getHeight() / 2;
 
+        $name = request()->getRequestUri() . '.' . "png";
+
         try {
 
-            $img = Image::canvas($this->getWidth(), $this->getHeight(), $this->getBgColor())->text($this->getName(), $xAxis, $yAxis, function ($font) {
-                $font->file(app()->basePath("public/fonts/Roboto-Black.ttf"));
-                $font->size($this->getFontSize());
-                $font->color($this->getTextColor());
-                $font->align('center');
-                $font->valign('center');
-            })->encode("png", 100);
-
-            $mimeType = last(explode("/", $img->mime()));
-            $name = uniqid('', false) . '.' . $mimeType;
-            $destinationPath = app()->basePath("public/images/");
-
-            $img->save($destinationPath . $name, 100);
+            if(!file_exists(app()->basePath("public/images/" . $name))) {
+                $img = Image::canvas($this->getWidth(), $this->getHeight(), $this->getBgColor())->text($this->getName(), $xAxis, $yAxis, function ($font) {
+                    $font->file(app()->basePath("public/fonts/Roboto-Black.ttf"));
+                    $font->size($this->getFontSize());
+                    $font->color($this->getTextColor());
+                    $font->align('center');
+                    $font->valign('center');
+                })->encode("png", 100);
+                $destinationPath = app()->basePath("public/images/");
+                $img->save($destinationPath . $name, 100);
+            }
 
             $res = [
                 "status" => 200,
