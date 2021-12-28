@@ -16,7 +16,6 @@
 use Laravel\Lumen\Routing\Router;
 
 $router->get('/', "HomeController@index");
-$router->get('/clean-images', "HomeController@cleanImages");
 $router->group(['middleware' => 'throttle:10,1'], function () use ($router) {
     $router->get('/api/', "ApiController@index");
 });
