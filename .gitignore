@@ -1,2 +1,4 @@
 tests/
 composer.lock
+.idea/
+vendor
