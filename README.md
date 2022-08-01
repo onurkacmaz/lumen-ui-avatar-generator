@@ -22,6 +22,8 @@ This application allows you to take pictures according to the parameter you send
 
 **lowerCase=true/false**
 
+**rounded=true/false**
+
 ## Examples
 
 **avatar.onurkacmaz.com/api?**_name=Onur Kaçmaz_
