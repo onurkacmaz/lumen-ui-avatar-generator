@@ -35,35 +35,45 @@ class ApiController extends Controller
         $validator = Validator::make($request->all(), [
             "name" => "required"
         ]);
+
         if ($validator->fails()) {
             return $this->responseError($validator->errors()->getMessages(), 400);
         }
+
         $image = $this->generator->setName($request->get("name"));
+
         if ($request->has("backgroundColor") && $request->filled("backgroundColor")) {
             $image->setBackgroundColor($request->get("backgroundColor"));
-        }else {
-            $image->setBackgroundColor();
         }
+
         if ($request->has("fontSize") && $request->filled("fontSize")) {
             $image->setFontSize($request->get("fontSize"));
         }
+
         if (($request->has("width") && $request->filled("width")) || ($request->has("height") && $request->filled("height"))) {
             $image->setSize($request->get("width"), $request->get("height"));
         }
+
         if ($request->has("textColor") && $request->filled("textColor")) {
             $image->setTextColor($request->get("textColor"));
-        }else {
-            $image->setTextColor();
         }
+
         if ($request->has("upperCase") && $request->filled("upperCase") && (bool)$request->get("upperCase") === true) {
             $image->upperCase();
         }else {
             $image->lowerCase();
         }
+
+        if ($request->has('rounded')) {
+            $image->setRounded((int)$request->get('rounded'));
+        }
+
         $image = $image->generate();
+
         if ($image["status"] !== 200) {
             return $this->responseError($image["errors"], $image["status"]);
         }
+
         return $this->responseSuccess($image["url"], $image["status"]);
     }
 

@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Str;
 use Intervention\Image\Exception\NotReadableException;
 use Intervention\Image\Facades\Image;
+use Intervention\Image\Gd\Shapes\CircleShape;
 
 class AvatarGenerator
 {
@@ -13,11 +14,12 @@ class AvatarGenerator
     public const TXT_COLOR = "#000000";
 
     private $name;
-    private $bgColor;
+    private $bgColor = self::BG_COLOR;
     private $width = 64;
     private $height = 64;
     private $fontSize = 15;
-    private $textColor;
+    private $textColor = self::TXT_COLOR;
+    private $rounded = 0;
 
     public function setName(string $name): AvatarGenerator
     {
@@ -71,14 +73,18 @@ class AvatarGenerator
 
         try {
 
-            if(!file_exists(app()->basePath("public/images/" . $name))) {
-                $img = Image::canvas($this->getWidth(), $this->getHeight(), $this->getBgColor())->text($this->getName(), $xAxis, $yAxis, function ($font) {
-                    $font->file(app()->basePath("public/fonts/Roboto-Black.ttf"));
-                    $font->size($this->getFontSize());
-                    $font->color($this->getTextColor());
-                    $font->align('center');
-                    $font->valign('center');
-                })->encode("png", 100);
+            if (!file_exists(app()->basePath("public/images/" . $name))) {
+                $img = Image::canvas($this->getWidth(), $this->getHeight(), !$this->getRounded() ? $this->getBgColor() : null)
+                    ->circle($this->getWidth(), $this->getWidth() / 2, $this->getHeight() / 2, function (CircleShape $draw) {
+                        $draw->background($this->getBgColor());
+                    })
+                    ->text($this->getName(), $xAxis, $yAxis, function ($font) {
+                        $font->file(app()->basePath("public/fonts/Roboto-Black.ttf"));
+                        $font->size($this->getFontSize());
+                        $font->color($this->getTextColor());
+                        $font->align('center');
+                        $font->valign('center');
+                    })->encode("png", 100);
                 $destinationPath = app()->basePath("public/images/");
                 $img->save($destinationPath . $name, 100);
             }
@@ -88,12 +94,12 @@ class AvatarGenerator
                 "url" => "images/" . $name
             ];
 
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             if ($e instanceof NotReadableException) {
                 $errors = [
                     "not_readable_color" => $e->getMessage()
                 ];
-            }else {
+            } else {
                 $errors = [
                     "unknown_error" => $e->getMessage()
                 ];
@@ -143,4 +149,13 @@ class AvatarGenerator
         return $this->textColor;
     }
 
+    public function setRounded(int $rounded)
+    {
+        $this->rounded = $rounded;
+    }
+
+    public function getRounded(): bool
+    {
+        return (bool)$this->rounded;
+    }
 }
